@@ -1,16 +1,16 @@
 Build
 
-install node for npm
-install typescript `npm install typescript`
-transpile with `tsc` (the configuration in tsconfig.json should suffice)
+- install node for npm
+- install typescript `npm install typescript`
+- transpile with `tsc` (the configuration in tsconfig.json should suffice)
 
 note: the project is already transpiled in `out` folder.
 
 Running
 
-install http-server `npm install http-server` (to serve the video file)
-run http-server `http-server out -p 8066 --cors`
-load index.html
+- install http-server `npm install http-server` (to serve the video file)
+- run http-server `http-server out -p 8066 --cors
+- load index.html
 
 Notes
 
