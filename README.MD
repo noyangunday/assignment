@@ -9,7 +9,7 @@ note: the project is already transpiled in `out` folder.
 Running
 
 - install http-server `npm install http-server` (to serve the video file)
-- run http-server `http-server out -p 8066 --cors
+- run http-server `http-server out -p 8066 --cors`
 - load index.html
 
 Notes
