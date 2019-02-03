@@ -70,9 +70,7 @@ module vnova.video {
         private render(): void {
             var tGL: WebGLRenderingContext = Context.gl;
 
-            //DESIGN-NOTE: if video is paused, could stop rendering, as each
-            // animation frame also uploads the data in video to a texture
-            // in each tick.
+            //DESIGN-NOTE: if video is paused, could stop rendering
 
             tGL.clear(WebGLRenderingContext.COLOR_BUFFER_BIT);
 
