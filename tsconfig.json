@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+      "noImplicitAny": true,
+      "sourceMap": true,
+      "target": "ES5",
+      "experimentalDecorators": true,
+      "preserveConstEnums": true,
+      "removeComments": true,
+      "outFile": "out/player.js",
+    },
+    "files": [
+      "src/framework/video/Resource.ts",
+      "src/framework/video/Context.ts",
+      "src/framework/video/Utils.ts",
+      "src/framework/video/Camera.ts",
+      "src/framework/video/Shader.ts",
+      "src/framework/video/Texture.ts",
+      "src/framework/video/Video.ts",
+      "src/framework/video/Primitive.ts",
+      "src/framework/video/Material.ts",
+      "src/framework/video/VideoRenderer.ts",
+      "src/app/VideoPlayer.ts"
+    ]
+  }
