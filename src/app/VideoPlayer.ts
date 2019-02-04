@@ -207,8 +207,9 @@ module vnova.app {
             
             //DESIGN-NOTE: it's not good practice to get this resource this way and
             // resource manager should be invisible to this layer. Need this for video
-            // texture updates but this could've been solved with some signal mechanism
-            // or internally by the renderer itself.
+            // texture updates as there's no hook to know video frame updates through
+            // DOM object itself, but this could've been solved with some signal mechanism
+            // or internally by the renderer itself (as the draw calls are capped with vsync)
             this.mVideo = <video.Video>video.ResourceManager.getResource("video", video.Video);
 
             this.mVideoElement.oncanplay = this.onVideoReady.bind(this);
