@@ -293,36 +293,21 @@ var vnova;
         var Video = (function (_super) {
             __extends(Video, _super);
             function Video(aConfig) {
-                var tVideo;
                 _super.call(this, aConfig);
-                tVideo = this.mVideoElement = document.createElement("video");
-                tVideo.autoplay = true;
-                tVideo.loop = true;
-                tVideo.muted = true;
-                tVideo.setAttribute("crossOrigin", "anonymous");
-                tVideo.oncanplay = this.onReady.bind(this);
-                this.mLoaded = false;
                 this.mFormat = aConfig.format;
             }
-            Object.defineProperty(Video.prototype, "videoElement", {
-                get: function () {
-                    return this.mVideoElement;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            Video.prototype.updateTexture = function () {
+            Video.prototype.onUpdate = function (aVideoElement) {
                 var tGL = video.Context.gl;
-                if (this.mLoaded && !this.mVideoElement.paused) {
+                if (this.mLoaded && !aVideoElement.paused) {
                     this.bind(0);
-                    tGL.texImage2D(WebGLRenderingContext.TEXTURE_2D, 0, this.mFormat, this.mFormat, WebGLRenderingContext.UNSIGNED_BYTE, this.mVideoElement);
+                    tGL.texImage2D(WebGLRenderingContext.TEXTURE_2D, 0, this.mFormat, this.mFormat, WebGLRenderingContext.UNSIGNED_BYTE, aVideoElement);
                 }
             };
-            Video.prototype.onReady = function () {
+            Video.prototype.onReady = function (aVideoElement) {
                 var tGL = video.Context.gl;
                 this.mLoaded = true;
                 this.bind(0);
-                tGL.texImage2D(WebGLRenderingContext.TEXTURE_2D, 0, this.mFormat, this.mFormat, WebGLRenderingContext.UNSIGNED_BYTE, this.mVideoElement);
+                tGL.texImage2D(WebGLRenderingContext.TEXTURE_2D, 0, this.mFormat, this.mFormat, WebGLRenderingContext.UNSIGNED_BYTE, aVideoElement);
             };
             return Video;
         }(video.Texture));
@@ -425,7 +410,7 @@ var vnova;
         }());
         video.RenderNode = RenderNode;
         var VideoRenderer = (function () {
-            function VideoRenderer(aResourceMap, aConfig, aCounterCallback) {
+            function VideoRenderer(aResourceMap, aConfig, aCounterCallback, aRenderCallback) {
                 var _this = this;
                 this.mNodes = [];
                 var tCamera = aConfig.camera && new video.Camera(aConfig.camera);
@@ -435,17 +420,9 @@ var vnova;
                     _this.mNodes.push(new RenderNode(tPrimitive, tMaterial, tCamera));
                 });
                 this.mFPSCounter = new video.Performance(aCounterCallback);
-                this.mRenderCallback = undefined;
-                this.render();
+                this.mRenderCallback = aRenderCallback;
             }
-            Object.defineProperty(VideoRenderer.prototype, "renderCallback", {
-                set: function (aRenderCallback) {
-                    this.mRenderCallback = aRenderCallback;
-                },
-                enumerable: true,
-                configurable: true
-            });
-            VideoRenderer.prototype.render = function () {
+            VideoRenderer.prototype.run = function () {
                 var tGL = video.Context.gl;
                 tGL.clear(WebGLRenderingContext.COLOR_BUFFER_BIT);
                 this.mRenderCallback && this.mRenderCallback();
@@ -453,7 +430,7 @@ var vnova;
                     aNode.draw();
                 });
                 this.mFPSCounter.registerTick();
-                window.requestAnimationFrame(this.render.bind(this));
+                window.requestAnimationFrame(this.run.bind(this));
             };
             return VideoRenderer;
         }());
@@ -473,20 +450,25 @@ var vnova;
                     name: "effectScale",
                     initialValue: 0
                 });
-                VideoPlayer.sScene.nodes[0].material.uniforms = [this.mEffectVideoRatio];
                 this.mCanvas = document.getElementById("canvas");
-                this.mFramework = new vnova.video.VideoRenderer(VideoPlayer.sResources, VideoPlayer.sScene, this.onFPSCounterUpdate);
+                this.mVideoElement = document.createElement("video");
+                this.mVideoElement.autoplay = true;
+                this.mVideoElement.loop = true;
+                this.mVideoElement.muted = true;
+                this.mVideoElement.setAttribute("crossOrigin", "anonymous");
+                this.mVideoElement.onloadedmetadata = this.onVideoSizeKnown.bind(this);
+                VideoPlayer.sScene.nodes[0].material.uniforms = [this.mEffectVideoRatio];
+                this.mFramework = new vnova.video.VideoRenderer(VideoPlayer.sResources, VideoPlayer.sScene, this.onFPSCounterUpdate.bind(this), this.onRenderFrame.bind(this));
                 this.mPlayIcon = document.getElementById("playIcon");
                 this.mVideo = vnova.video.ResourceManager.getResource("video", vnova.video.Video);
-                tVideoElement = this.mVideo.videoElement;
-                tVideoElement.onloadedmetadata = this.onVideoSizeKnown.bind(this);
+                this.mVideoElement.oncanplay = this.onVideoReady.bind(this);
                 this.mPlayIcon.onclick = this.mCanvas.onclick = this.onCanvasClick.bind(this);
                 window.onresize = this.onSizeChanged.bind(this);
-                tVideoElement.src = aVideoSource;
-                this.mFramework.renderCallback = this.onRenderFrame.bind(this);
+                this.mVideoElement.src = aVideoSource;
+                this.mFramework.run();
             }
             VideoPlayer.prototype.onCanvasClick = function () {
-                var tVideoElement = this.mVideo.videoElement;
+                var tVideoElement = this.mVideoElement;
                 if (!tVideoElement.paused) {
                     tVideoElement.pause();
                     this.mPlayIcon.style.visibility = "visible";
@@ -498,7 +480,7 @@ var vnova;
             };
             VideoPlayer.prototype.onSizeChanged = function () {
                 {
-                    var tVideoElement = this.mVideo.videoElement, tVideoAspect = tVideoElement.videoWidth / tVideoElement.videoHeight, tHeight = Math.min(tVideoElement.videoHeight, window.innerHeight) - 50, tWidth = tHeight * tVideoAspect;
+                    var tVideoElement = this.mVideoElement, tVideoAspect = tVideoElement.videoWidth / tVideoElement.videoHeight, tHeight = Math.min(tVideoElement.videoHeight, window.innerHeight) - 50, tWidth = tHeight * tVideoAspect;
                     this.mPlayIcon.style.left = [((tWidth - this.mPlayIcon.width) / 2).toString(), "px"].join("");
                     this.mPlayIcon.style.top = [((tHeight - this.mPlayIcon.height) / 2).toString(), "px"].join("");
                     this.mCanvas.width = tWidth;
@@ -507,12 +489,15 @@ var vnova;
                 }
             };
             VideoPlayer.prototype.onVideoSizeKnown = function () {
-                var tVideoElement = this.mVideo.videoElement;
+                var tVideoElement = this.mVideoElement;
                 this.mEffectVideoRatio.value = tVideoElement.videoWidth / VideoPlayer.sEffectConfig.width;
                 this.onSizeChanged();
             };
             VideoPlayer.prototype.onRenderFrame = function () {
-                this.mVideo.updateTexture();
+                this.mVideo.onUpdate(this.mVideoElement);
+            };
+            VideoPlayer.prototype.onVideoReady = function () {
+                this.mVideo.onReady(this.mVideoElement);
             };
             VideoPlayer.prototype.onFPSCounterUpdate = function (aFPS) {
                 document.getElementById("fps").innerHTML = [" FPS: ", aFPS.toString()].join(" ");
