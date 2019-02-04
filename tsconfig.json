@@ -6,7 +6,7 @@
       "experimentalDecorators": true,
       "preserveConstEnums": true,
       "removeComments": true,
-      "outFile": "out/player.js",
+      "outFile": "out/player.js"
     },
     "files": [
       "src/framework/video/Resource.ts",
