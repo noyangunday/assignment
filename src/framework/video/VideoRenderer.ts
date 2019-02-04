@@ -46,7 +46,7 @@ module vnova.video {
         private mFPSCounter: Performance;
         private mRenderCallback: () => void;
 
-        constructor(aResourceMap: IResourceMap, aConfig: IPlayerScene, aCounterCallback?: (aFPS: number) => void) {
+        constructor(aResourceMap: IResourceMap, aConfig: IPlayerScene, aCounterCallback?: (aFPS: number) => void, aRenderCallback?: () => void) {
             var tCamera: Camera = aConfig.camera && new Camera(aConfig.camera);
 
             ResourceManager.map = aResourceMap;
@@ -56,18 +56,13 @@ module vnova.video {
                 this.mNodes.push(new RenderNode(tPrimitive, tMaterial, tCamera));
             });
             this.mFPSCounter = new Performance(aCounterCallback);
-            this.mRenderCallback = undefined;
 
-            this.render();
-        }
-
-        //DESIGN-NOTE: this could be a encapsulated by a subscription system for multiple callbacks
-        // e.g. module based update methods. 
-        public set renderCallback(aRenderCallback: () => void) {
+            //DESIGN-NOTE: this could be a encapsulated by a subscription system for multiple callbacks
+            // e.g. module based update methods. 
             this.mRenderCallback = aRenderCallback;
         }
 
-        private render(): void {
+        public run(): void {
             var tGL: WebGLRenderingContext = Context.gl;
 
             //DESIGN-NOTE: if video is paused, could stop rendering
@@ -87,7 +82,7 @@ module vnova.video {
 
             //DESIGN-NOTE: requestAnimationFrame is not supported by some (old) browsers.
             // using a timeout with desired framerate could be considered as a fallback.
-			window.requestAnimationFrame(this.render.bind(this));
+			window.requestAnimationFrame(this.run.bind(this));
         }
 
     }
