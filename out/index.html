@@ -6,7 +6,7 @@
     <body>
         <canvas id="canvas" width=960 height=540 style="position: absolute"></canvas>
         <div id="fps" style="position: absolute; color: red; font-family: 'Lucida Console', Monaco, monospace; font-size: 18px; background: black;"> </div>
-        <img id="playIcon" src="play.png" style="position: absolute; left: 0px; top: 0px" width=200 height=200>
+        <img id="playIcon" src="play.png" style="position: absolute; left: 0px; top: 0px; visibility: hidden" width=200 height=200>
         <script src='player.js' type='text/javascript'></script>
         <script>
             var videoPlayer = new vnova.app.VideoPlayer("http://127.0.0.1:8066/video.mp4");

@@ -498,6 +498,9 @@ var vnova;
             };
             VideoPlayer.prototype.onVideoReady = function () {
                 this.mVideo.onReady(this.mVideoElement);
+                if (this.mVideoElement.paused) {
+                    this.mPlayIcon.style.visibility = "visible";
+                }
             };
             VideoPlayer.prototype.onFPSCounterUpdate = function (aFPS) {
                 document.getElementById("fps").innerHTML = [" FPS: ", aFPS.toString()].join(" ");
