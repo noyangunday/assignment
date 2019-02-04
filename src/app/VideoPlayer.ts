@@ -204,6 +204,11 @@ module vnova.app {
                 this.onFPSCounterUpdate.bind(this),
                 this.onRenderFrame.bind(this));
             this.mPlayIcon = <HTMLImageElement>document.getElementById("playIcon");
+            
+            //DESIGN-NOTE: it's not good practice to get this resource this way and
+            // resource manager should be invisible to this layer. Need this for video
+            // texture updates but this could've been solved with some signal mechanism
+            // or internally by the renderer itself.
             this.mVideo = <video.Video>video.ResourceManager.getResource("video", video.Video);
 
             this.mVideoElement.oncanplay = this.onVideoReady.bind(this);
