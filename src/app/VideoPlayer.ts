@@ -30,6 +30,7 @@ module vnova.app {
             count: 1000
         };
 
+        //DESIGN-NOTE: This configuration could be moved to a JSON.
         private static sResources: video.IResourceMap = {
             map: {
                 videoPrimitive: <video.IResourceConfig>{
