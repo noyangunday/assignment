@@ -23,6 +23,7 @@ module vnova.app {
 
     export class VideoPlayer {
 
+        //DESIGN-NOTE: this configuration could be moved into a JSON file
         private static sEffectConfig: IEffectConfig = {
             width: 1920,
             height: 1080,
