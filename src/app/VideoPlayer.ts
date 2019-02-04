@@ -30,7 +30,6 @@ module vnova.app {
             count: 1000
         };
 
-        //DESIGN-NOTE: This configuration could be moved to a JSON.
         private static sResources: video.IResourceMap = {
             map: {
                 videoPrimitive: <video.IResourceConfig>{
@@ -168,6 +167,7 @@ module vnova.app {
         private mCanvas: HTMLCanvasElement;
         private mEffectVideoRatio: video.FloatUniform;
         private mPlayIcon: HTMLImageElement;
+        private mVideoElement: HTMLVideoElement;
 
         constructor (aVideoSource: string) {
             var tTextureConfig: video.IDataTextureConfig = <video.IDataTextureConfig>VideoPlayer.sResources.map["effectTexture"],
@@ -183,31 +183,42 @@ module vnova.app {
                 name: "effectScale",
                 initialValue: 0
             });
-
-            VideoPlayer.sScene.nodes[0].material.uniforms = [this.mEffectVideoRatio];
             
             this.mCanvas = <HTMLCanvasElement>document.getElementById("canvas");
+
+            this.mVideoElement = document.createElement("video");
+
+            this.mVideoElement.autoplay = true;
+            this.mVideoElement.loop = true;
+            this.mVideoElement.muted = true;
+            this.mVideoElement.setAttribute("crossOrigin", "anonymous");
+            this.mVideoElement.onloadedmetadata = this.onVideoSizeKnown.bind(this);
+
+            // Modify config
+            VideoPlayer.sScene.nodes[0].material.uniforms = [this.mEffectVideoRatio];
+
             this.mFramework = new video.VideoRenderer(
                 VideoPlayer.sResources,
                 VideoPlayer.sScene,
-                this.onFPSCounterUpdate);
+                this.onFPSCounterUpdate.bind(this),
+                this.onRenderFrame.bind(this));
             this.mPlayIcon = <HTMLImageElement>document.getElementById("playIcon");
             this.mVideo = <video.Video>video.ResourceManager.getResource("video", video.Video);
-            tVideoElement = this.mVideo.videoElement;
 
-            tVideoElement.onloadedmetadata = this.onVideoSizeKnown.bind(this);
+            this.mVideoElement.oncanplay = this.onVideoReady.bind(this);
+
             this.mPlayIcon.onclick = this.mCanvas.onclick = this.onCanvasClick.bind(this);
             window.onresize = this.onSizeChanged.bind(this)
 
-            tVideoElement.src = aVideoSource;
+            this.mVideoElement.src = aVideoSource;
 
-            this.mFramework.renderCallback = this.onRenderFrame.bind(this);
+            this.mFramework.run();
         }
 
         private test: number = 0;
 
         private onCanvasClick(): void {
-            var tVideoElement: HTMLVideoElement = this.mVideo.videoElement;
+            var tVideoElement: HTMLVideoElement = this.mVideoElement;
             if (!tVideoElement.paused) {
                 tVideoElement.pause();
                 this.mPlayIcon.style.visibility = "visible";
@@ -219,7 +230,7 @@ module vnova.app {
 
         private onSizeChanged(): void {
             {
-                var tVideoElement: HTMLVideoElement = this.mVideo.videoElement,
+                var tVideoElement: HTMLVideoElement = this.mVideoElement,
                     tVideoAspect: number = tVideoElement.videoWidth / tVideoElement.videoHeight,
                     tHeight: number = Math.min(tVideoElement.videoHeight, window.innerHeight) - 50,
                     tWidth: number = tHeight * tVideoAspect;
@@ -234,13 +245,17 @@ module vnova.app {
         }
 
         private onVideoSizeKnown(): void {
-            var tVideoElement: HTMLVideoElement = this.mVideo.videoElement;
+            var tVideoElement: HTMLVideoElement = this.mVideoElement;
             this.mEffectVideoRatio.value = tVideoElement.videoWidth / VideoPlayer.sEffectConfig.width;
             this.onSizeChanged();
         }
 
         private onRenderFrame(): void {
-            this.mVideo.updateTexture();
+            this.mVideo.onUpdate(this.mVideoElement);
+        }
+
+        private onVideoReady(): void {
+            this.mVideo.onReady(this.mVideoElement);
         }
 
         private onFPSCounterUpdate(aFPS: number): void {
