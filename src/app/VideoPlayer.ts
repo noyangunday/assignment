@@ -169,7 +169,7 @@ module vnova.app {
         private mPlayIcon: HTMLImageElement;
 
         constructor (aVideoSource: string) {
-            var tTextureConfig: video.IDataTextureConfig = <video.IDataTextureConfig>VideoPlayer.sResources.map.effectTexture,
+            var tTextureConfig: video.IDataTextureConfig = <video.IDataTextureConfig>VideoPlayer.sResources.map["effectTexture"],
                 tVideoElement: HTMLVideoElement;
             
             tTextureConfig.data = new Uint8Array(vnova.video.Utils.generateBinaryNoise(
