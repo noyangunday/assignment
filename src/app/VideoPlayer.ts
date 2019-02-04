@@ -207,8 +207,6 @@ module vnova.app {
 
         private onCanvasClick(): void {
             var tVideoElement: HTMLVideoElement = this.mVideo.videoElement;
-            this.test += 10;
-            this.mEffectVideoRatio.value = this.test;
             if (!tVideoElement.paused) {
                 tVideoElement.pause();
                 this.mPlayIcon.style.visibility = "visible";
