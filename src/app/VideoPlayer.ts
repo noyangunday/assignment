@@ -257,6 +257,9 @@ module vnova.app {
 
         private onVideoReady(): void {
             this.mVideo.onReady(this.mVideoElement);
+            if (this.mVideoElement.paused) {
+                this.mPlayIcon.style.visibility = "visible";
+            }
         }
 
         private onFPSCounterUpdate(aFPS: number): void {
