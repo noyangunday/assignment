@@ -28,7 +28,7 @@ module vnova.video {
             tVideo.autoplay = true;
             tVideo.loop = true;
             tVideo.muted = true;
-            tVideo.crossOrigin = "anonymous";
+            tVideo.setAttribute("crossOrigin", "anonymous");
             tVideo.oncanplay = this.onReady.bind(this);
 
             this.mLoaded = false;
