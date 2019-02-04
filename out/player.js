@@ -1,16 +1,3 @@
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 var vnova;
 (function (vnova) {
     var video;
@@ -173,6 +160,11 @@ var vnova;
         video.Camera = Camera;
     })(video = vnova.video || (vnova.video = {}));
 })(vnova || (vnova = {}));
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var vnova;
 (function (vnova) {
     var video;
@@ -220,17 +212,16 @@ var vnova;
                 var _this = this;
                 var tGL = video.Context.gl, tShaders = [tGL.createShader(WebGLRenderingContext.VERTEX_SHADER),
                     tGL.createShader(WebGLRenderingContext.FRAGMENT_SHADER)], tSources = [aConfig.vertexShader, aConfig.fragmentShader];
-                _this = _super.call(this, aConfig) || this;
-                _this.mProgram = tGL.createProgram();
+                _super.call(this, aConfig);
+                this.mProgram = tGL.createProgram();
                 tShaders.forEach(function (tShader, tIndex) {
                     tGL.shaderSource(tShader, tSources[tIndex]);
                     tGL.compileShader(tShader);
                     tGL.attachShader(_this.mProgram, tShader);
                     console.log(tGL.getShaderInfoLog(tShader));
                 });
-                tGL.linkProgram(_this.mProgram);
-                tGL.useProgram(_this.mProgram);
-                return _this;
+                tGL.linkProgram(this.mProgram);
+                tGL.useProgram(this.mProgram);
             }
             Shader.prototype.bind = function () {
                 var tGL = video.Context.gl;
@@ -266,16 +257,14 @@ var vnova;
         var Texture = (function (_super) {
             __extends(Texture, _super);
             function Texture(aConfig) {
-                var _this = this;
                 var tGL = video.Context.gl;
-                _this = _super.call(this, aConfig) || this;
-                _this.mTextureObject = tGL.createTexture();
-                _this.bind(0);
+                _super.call(this, aConfig);
+                this.mTextureObject = tGL.createTexture();
+                this.bind(0);
                 tGL.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_WRAP_T, WebGLRenderingContext.CLAMP_TO_EDGE);
                 tGL.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_WRAP_S, WebGLRenderingContext.CLAMP_TO_EDGE);
                 tGL.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_MAG_FILTER, WebGLRenderingContext.LINEAR);
                 tGL.texParameteri(WebGLRenderingContext.TEXTURE_2D, WebGLRenderingContext.TEXTURE_MIN_FILTER, WebGLRenderingContext.LINEAR);
-                return _this;
             }
             Texture.prototype.bind = function (aTexUnit) {
                 var tGL = video.Context.gl;
@@ -288,11 +277,9 @@ var vnova;
         var DataTexture = (function (_super) {
             __extends(DataTexture, _super);
             function DataTexture(aConfig) {
-                var _this = this;
                 var tGL = video.Context.gl;
-                _this = _super.call(this, aConfig) || this;
+                _super.call(this, aConfig);
                 tGL.texImage2D(WebGLRenderingContext.TEXTURE_2D, 0, aConfig.format, aConfig.width, aConfig.height, 0, aConfig.format, WebGLRenderingContext.UNSIGNED_BYTE, aConfig.data);
-                return _this;
             }
             return DataTexture;
         }(Texture));
@@ -306,18 +293,16 @@ var vnova;
         var Video = (function (_super) {
             __extends(Video, _super);
             function Video(aConfig) {
-                var _this = this;
                 var tVideo;
-                _this = _super.call(this, aConfig) || this;
-                tVideo = _this.mVideoElement = document.createElement("video");
+                _super.call(this, aConfig);
+                tVideo = this.mVideoElement = document.createElement("video");
                 tVideo.autoplay = true;
                 tVideo.loop = true;
                 tVideo.muted = true;
-                tVideo.crossOrigin = "anonymous";
-                tVideo.oncanplay = _this.onReady.bind(_this);
-                _this.mLoaded = false;
-                _this.mFormat = aConfig.format;
-                return _this;
+                tVideo.setAttribute("crossOrigin", "anonymous");
+                tVideo.oncanplay = this.onReady.bind(this);
+                this.mLoaded = false;
+                this.mFormat = aConfig.format;
             }
             Object.defineProperty(Video.prototype, "videoElement", {
                 get: function () {
@@ -351,16 +336,14 @@ var vnova;
         var Primitive = (function (_super) {
             __extends(Primitive, _super);
             function Primitive(aConfig) {
-                var _this = this;
                 var tGL = video.Context.gl;
-                _this = _super.call(this, aConfig) || this;
-                _this.mVertexBuffer = tGL.createBuffer();
-                _this.mIndexBuffer = tGL.createBuffer();
-                _this.bind();
+                _super.call(this, aConfig);
+                this.mVertexBuffer = tGL.createBuffer();
+                this.mIndexBuffer = tGL.createBuffer();
+                this.bind();
                 tGL.bufferData(WebGLRenderingContext.ARRAY_BUFFER, new Float32Array(aConfig.vertices), WebGLRenderingContext.STATIC_DRAW);
                 tGL.bufferData(WebGLRenderingContext.ELEMENT_ARRAY_BUFFER, new Uint16Array(aConfig.indices), WebGLRenderingContext.STATIC_DRAW);
-                _this.mDrawSize = aConfig.indices.length;
-                return _this;
+                this.mDrawSize = aConfig.indices.length;
             }
             Primitive.prototype.bind = function () {
                 var tGL = video.Context.gl;
@@ -484,7 +467,7 @@ var vnova;
         var VideoPlayer = (function () {
             function VideoPlayer(aVideoSource) {
                 this.test = 0;
-                var tTextureConfig = VideoPlayer.sResources.map.effectTexture, tVideoElement;
+                var tTextureConfig = VideoPlayer.sResources.map["effectTexture"], tVideoElement;
                 tTextureConfig.data = new Uint8Array(vnova.video.Utils.generateBinaryNoise(VideoPlayer.sEffectConfig.modifier, VideoPlayer.sEffectConfig.count, VideoPlayer.sEffectConfig.width * VideoPlayer.sEffectConfig.height));
                 this.mEffectVideoRatio = new vnova.video.FloatUniform({
                     name: "effectScale",
@@ -504,8 +487,6 @@ var vnova;
             }
             VideoPlayer.prototype.onCanvasClick = function () {
                 var tVideoElement = this.mVideo.videoElement;
-                this.test += 10;
-                this.mEffectVideoRatio.value = this.test;
                 if (!tVideoElement.paused) {
                     tVideoElement.pause();
                     this.mPlayIcon.style.visibility = "visible";
