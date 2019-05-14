@@ -2,8 +2,6 @@
 /// <reference path="../framework/video/Video.ts" />
 /*
 
-    2019, V-Nova
-
     author: Noyan Gunday
     date: 03 feb 2019
 
@@ -12,7 +10,7 @@
 //DESIGN-NOTE: The unit tests are not implemented within the scope of this
 // example but each framework module should be covered.
 
-module vnova.app {
+module challenge.app {
 
     interface IEffectConfig {
         width: number;
