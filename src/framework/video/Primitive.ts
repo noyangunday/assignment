@@ -2,14 +2,12 @@
 /// <reference path="Resource.ts" />
 /*
 
-    2019, V-Nova
-
     author: Noyan Gunday
     date: 03 feb 2019
 
 */
 
-module vnova.video {
+module challenge.video {
 
     export interface IPrimitiveData extends IResourceConfig {
         vertices: number[];
