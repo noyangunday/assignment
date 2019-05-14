@@ -7,7 +7,7 @@
 
 */
 
-module vnova.video {
+module challenge.video {
 
     export interface ITextureConfig extends IResourceConfig {
         format: number;
