@@ -1,13 +1,11 @@
 /*
 
-    2019, V-Nova
-
     author: Noyan Gunday
     date: 03 feb 2019
 
 */
 
-module vnova.video {
+module challenge.video {
 
     //DESIGN-NOTE: The resource manager could also implement a bookkeeping logic
     // to keep track of currently bound GPU resources and avoid blind binding of
