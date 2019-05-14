@@ -3,14 +3,12 @@
 /// <reference path="Shader.ts" />
 /*
 
-    2019, V-Nova
-
     author: Noyan Gunday
     date: 03 feb 2019
 
 */
 
-module vnova.video {
+module challenge.video {
 
     //DESIGN-NOTE: as the "framework" module is intended to look fully adjustable
     // very low level configuration is exposed to dev. Things like vertexStructure
