@@ -14,7 +14,7 @@ Running
 
 Notes
 
-I tried to avoid use of any 3rd party libraries in the spirit of the assignment. no extra installation is needed apart from typescript compiler.
+This is a 2 hour self-assignment for a coding challenge.
 
 Unit tests and API documentation is missing due to time limitations (was defined as 2 hours) but marked my remarks as
 `//DESIGN-NOTE` in the code. a project wide search for this string should reveal them.
