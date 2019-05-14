@@ -5,7 +5,7 @@
     date: 03 feb 2019
 
 */
-module vnova.video {
+module challenge.video {
 
     //DESIGN-NOTE: I implemented this camera class to accomodate Orthographic projection only
     // as perspective was not required. But since the effect is so simple, this wasn't used
