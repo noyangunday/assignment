@@ -3,14 +3,12 @@
 /// <reference path="Camera.ts" />
 /*
 
-    2019, V-Nova
-
     author: Noyan Gunday
     date: 03 feb 2019
 
 */
 
-module vnova.video {
+module challenge.video {
 
     //DESIGN-NOTE: At the moment the shaders work as a single piece of source code.
     // For better configurability; shaders could be designed as a set of meta definitions
