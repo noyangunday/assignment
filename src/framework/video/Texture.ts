@@ -2,8 +2,6 @@
 /// <reference path="Context.ts" />
 /*
 
-    2019, V-Nova
-
     author: Noyan Gunday
     date: 03 feb 2019
 
