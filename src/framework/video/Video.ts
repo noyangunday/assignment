@@ -3,14 +3,12 @@
 /// <reference path="Texture.ts" />
 /*
 
-    2019, V-Nova
-
     author: Noyan Gunday
     date: 03 feb 2019
 
 */
 
-module vnova.video {
+module challenge.video {
 
     export class Video extends Texture {
         private mFormat: number;
