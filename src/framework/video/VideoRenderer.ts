@@ -80,7 +80,7 @@ module challenge.video {
 
             //DESIGN-NOTE: requestAnimationFrame is not supported by some (old) browsers.
             // using a timeout with desired framerate could be considered as a fallback.
-			window.requestAnimationFrame(this.run.bind(this));
+	    window.requestAnimationFrame(this.run.bind(this));
         }
 
     }
